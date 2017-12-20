@@ -1,0 +1,14 @@
+{
+  "name": "regef-2dmath",
+  "devDependencies": {
+    "babel-eslint": "^8.0.3",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "rollup": "^0.52.2"
+  },
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "lint": "eslint src test -c .eslintrc"
+  }
+}
