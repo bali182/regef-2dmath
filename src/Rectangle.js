@@ -24,27 +24,30 @@ class Rectangle {
     })
   }
 
-  translate({ x, y }) {
+  translate(point) {
+    const input = new Point(point)
     return new Rectangle({
-      x: this.x + x,
-      y: this.y + y,
+      x: this.x + input.x,
+      y: this.y + input.y,
       width: this.width,
       height: this.height,
     })
   }
 
-  containsPoint({ x, y }) {
-    return y >= this.y
-      && y < this.y + this.height
-      && x >= this.x
-      && x < this.x + this.width
+  containsPoint(point) {
+    const input = new Point(point)
+    return input.y >= this.y
+      && input.y < this.y + this.height
+      && input.x >= this.x
+      && input.x < this.x + this.width
   }
 
-  containsRectangle({ x, y, width, height }) {
-    return this.x <= x
-      && this.y <= y
-      && this.x + this.width >= x + width
-      && this.y + this.height >= y + height
+  containsRectangle(rect) {
+    const input = new Rectangle(rect)
+    return this.x <= input.x
+      && this.y <= input.y
+      && this.x + this.width >= input.x + input.width
+      && this.y + this.height >= input.y + input.height
   }
 
   top() {

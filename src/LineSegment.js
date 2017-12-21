@@ -37,14 +37,15 @@ class LineSegment {
   }
 
   // TODO check with a math guy if this is correct
-  intersection({ x1, x2, y1, y2 }) {
+  intersection(lineSegment) {
+    const other = new LineSegment(lineSegment)
     const px = this.y1 - this.y2
     const py = this.x2 - this.x1
     const pw = (this.x1 * this.y2) - (this.x2 * this.y1)
 
-    const qx = y1 - y2
-    const qy = x2 - x1
-    const qw = (x1 * y2) - (x2 * y1)
+    const qx = other.y1 - other.y2
+    const qy = other.x2 - other.x1
+    const qw = (other.x1 * other.y2) - (other.x2 * other.y1)
 
     const x = (py * qw) - (qy * pw)
     const y = (qx * pw) - (px * qw)

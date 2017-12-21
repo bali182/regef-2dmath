@@ -6,24 +6,27 @@ class Point {
     this.y = Number(y)
   }
 
-  translate({ x, y }) {
+  translate(point) {
+    const other = new Point(point)
     return new Point({
-      x: this.x + Number(x),
-      y: this.y + Number(y),
+      x: this.x + other.x,
+      y: this.y + other.y,
     })
   }
 
-  lineSegmentTo({ x, y }) {
+  lineSegmentTo(point) {
+    const other = new Point(point)
     return new LineSegment({
       x1: this.x,
       y1: this.y,
-      x2: Number(x),
-      y2: Number(y),
+      x2: other.x,
+      y2: other.y,
     })
   }
 
-  distanceFromPoint({ x, y }) {
-    return Math.sqrt(((Number(x) - this.x, 2) ** 2) + ((Number(y) - this.y) ** 2))
+  distanceFromPoint(point) {
+    const other = new Point(point)
+    return Math.sqrt(((other.x - this.x, 2) ** 2) + ((other.y - this.y) ** 2))
   }
 }
 
