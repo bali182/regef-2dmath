@@ -4,10 +4,10 @@ import LineSegment from './LineSegment'
 
 class Rectangle {
   constructor({ x, y, width, height }) {
-    this.x = x
-    this.y = y
-    this.width = width
-    this.height = height
+    this.x = Number(x)
+    this.y = Number(y)
+    this.width = Number(width)
+    this.height = Number(height)
   }
 
   location() {

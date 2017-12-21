@@ -1,7 +1,7 @@
 class Dimension {
   constructor({ width, height }) {
-    this.width = width
-    this.height = height
+    this.width = Number(width)
+    this.height = Number(height)
   }
 }
 

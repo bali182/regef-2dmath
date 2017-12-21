@@ -2,10 +2,10 @@ import Point from './Point'
 
 class LineSegment {
   constructor({ x: x1, y: y1 }, { x: x2, y: y2 }) {
-    this.x1 = x1
-    this.y1 = y1
-    this.x2 = x2
-    this.y2 = y2
+    this.x1 = Number(x1)
+    this.y1 = Number(y1)
+    this.x2 = Number(x2)
+    this.y2 = Number(y2)
   }
 
   point1() {
@@ -19,6 +19,51 @@ class LineSegment {
     return new Point({
       x: this.x2,
       y: this.y2,
+    })
+  }
+
+  length() {
+    const dx = this.x1 - this.x2
+    const dy = this.y1 - this.y2
+    return Math.sqrt((dx * dx) + (dy * dy))
+  }
+
+  isHorizontal() {
+    return this.y1 === this.y2
+  }
+
+  isVertical() {
+    return this.x1 === this.x2
+  }
+
+  // TODO check with a math guy if this is correct
+  intersection({ x1, x2, y1, y2 }) {
+    const px = this.y1 - this.y2
+    const py = this.x2 - this.x1
+    const pw = (this.x1 * this.y2) - (this.x2 * this.y1)
+
+    const qx = y1 - y2
+    const qy = x2 - x1
+    const qw = (x1 * y2) - (x2 * y1)
+
+    const x = (py * qw) - (qy * pw)
+    const y = (qx * pw) - (px * qw)
+    const w = (px * qy) - (qx * py)
+
+    const intersectionX = x / w
+    const intersectionY = y / w
+
+    if (
+      (Number.isNaN(intersectionX)) ||
+      (!Number.isFinite(intersectionX) || Number.isNaN(intersectionY)) ||
+      (!Number.isFinite(intersectionY))
+    ) {
+      return null
+    }
+
+    return new Point({
+      x: intersectionX,
+      y: intersectionY,
     })
   }
 }
