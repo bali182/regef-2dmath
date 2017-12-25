@@ -1,7 +1,7 @@
-import Point from './Point'
+import { point, lineSegment } from './factories'
 
 class LineSegment {
-  constructor({ x: x1, y: y1 }, { x: x2, y: y2 }) {
+  constructor(x1, y1, x2, y2) {
     this.x1 = Number(x1)
     this.y1 = Number(y1)
     this.x2 = Number(x2)
@@ -9,17 +9,11 @@ class LineSegment {
   }
 
   point1() {
-    return new Point({
-      x: this.x1,
-      y: this.y1,
-    })
+    return point(this.x1, this.y1)
   }
 
   point2() {
-    return new Point({
-      x: this.x2,
-      y: this.y2,
-    })
+    return point(this.x2, this.y2)
   }
 
   length() {
@@ -37,8 +31,8 @@ class LineSegment {
   }
 
   // TODO check with a math guy if this is correct
-  intersection(lineSegment) {
-    const other = new LineSegment(lineSegment)
+  intersection(segment) {
+    const other = lineSegment(segment)
     const px = this.y1 - this.y2
     const py = this.x2 - this.x1
     const pw = (this.x1 * this.y2) - (this.x2 * this.y1)
@@ -62,10 +56,7 @@ class LineSegment {
       return null
     }
 
-    return new Point({
-      x: intersectionX,
-      y: intersectionY,
-    })
+    return point(intersectionX, intersectionY)
   }
 }
 

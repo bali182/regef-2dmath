@@ -1,32 +1,33 @@
-import LineSegment from './LineSegment'
+import { point, lineSegment } from './factories'
 
 class Point {
-  constructor({ x, y }) {
+  constructor(x, y) {
     this.x = Number(x)
     this.y = Number(y)
   }
 
-  translate(point) {
-    const other = new Point(point)
-    return new Point({
-      x: this.x + other.x,
-      y: this.y + other.y,
-    })
+  translate(p) {
+    const other = point(p)
+    return point(
+      this.x + other.x,
+      this.y + other.y,
+    )
   }
 
-  lineSegmentTo(point) {
-    const other = new Point(point)
-    return new LineSegment({
-      x1: this.x,
-      y1: this.y,
-      x2: other.x,
-      y2: other.y,
-    })
+  lineSegmentTo(p) {
+    const other = point(p)
+    return lineSegment(
+      this.x,
+      this.y,
+      other.x,
+      other.y,
+    )
   }
 
-  distanceFromPoint(point) {
-    const other = new Point(point)
-    return Math.sqrt(((other.x - this.x, 2) ** 2) + ((other.y - this.y) ** 2))
+  distanceFromPoint(p) {
+    const other = point(p)
+    // eslint-disable-next-line no-restricted-properties
+    return Math.sqrt(Math.pow((other.x - this.x, 2), 2) + Math.pow((other.y - this.y), 2))
   }
 }
 

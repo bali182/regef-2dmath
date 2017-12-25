@@ -3,18 +3,10 @@
   "env": {
     "browser": true,
     "node": true,
-    "jest": true,
+    "jest": true
   },
   "rules": {
-    "object-curly-newline": [
-      "error",
-      {
-        "ObjectExpression": "always",
-        "ObjectPattern": {
-          "minProperties": 5
-        }
-      }
-    ],
+    "object-curly-newline": "off",
     "no-bitwise": "off",
     "semi": [
       "error",

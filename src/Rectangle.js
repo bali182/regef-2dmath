@@ -1,9 +1,7 @@
-import Point from './Point'
-import Dimension from './Dimension'
-import LineSegment from './LineSegment'
+import { point, dimension, lineSegment, rectangle } from './factories'
 
 class Rectangle {
-  constructor({ x, y, width, height }) {
+  constructor(x, y, width, height) {
     this.x = Number(x)
     this.y = Number(y)
     this.width = Number(width)
@@ -11,31 +9,25 @@ class Rectangle {
   }
 
   location() {
-    return new Point({
-      x: this.x,
-      y: this.y,
-    })
+    return point(this.x, this.y)
   }
 
   size() {
-    return new Dimension({
-      width: this.width,
-      height: this.height,
-    })
+    return dimension(this.width, this.height)
   }
 
-  translate(point) {
-    const input = new Point(point)
-    return new Rectangle({
-      x: this.x + input.x,
-      y: this.y + input.y,
-      width: this.width,
-      height: this.height,
-    })
+  translate(p) {
+    const input = point(p)
+    return rectangle(
+      this.x + input.x,
+      this.y + input.y,
+      this.width,
+      this.height,
+    )
   }
 
-  containsPoint(point) {
-    const input = new Point(point)
+  containsPoint(p) {
+    const input = point(p)
     return input.y >= this.y
       && input.y < this.y + this.height
       && input.x >= this.x
@@ -43,7 +35,7 @@ class Rectangle {
   }
 
   containsRectangle(rect) {
-    const input = new Rectangle(rect)
+    const input = rectangle(rect)
     return this.x <= input.x
       && this.y <= input.y
       && this.x + this.width >= input.x + input.width
@@ -51,66 +43,39 @@ class Rectangle {
   }
 
   top() {
-    return new LineSegment(
-      this.topLeft(),
-      this.topRight(),
-    )
+    return lineSegment(this.topLeft(), this.topRight())
   }
 
   right() {
-    return new LineSegment(
-      this.topRight(),
-      this.bottomRight(),
-    )
+    return lineSegment(this.topRight(), this.bottomRight())
   }
 
   bottom() {
-    return new LineSegment(
-      this.bottomRight(),
-      this.bottomLeft(),
-    )
+    return lineSegment(this.bottomRight(), this.bottomLeft())
   }
 
   left() {
-    return new LineSegment(
-      this.bottomLeft(),
-      this.topLeft(),
-    )
+    return lineSegment(this.bottomLeft(), this.topLeft())
   }
 
   center() {
-    return new Point({
-      x: this.x + (this.width / 2),
-      y: this.y + (this.height / 2),
-    })
+    return point(this.x + (this.width / 2), this.y + (this.height / 2))
   }
 
   topLeft() {
-    return new Point({
-      x: this.x,
-      y: this.y,
-    })
+    return point(this.x, this.y)
   }
 
   topRight() {
-    return new Point({
-      x: this.x + this.width,
-      y: this.y,
-    })
+    return point(this.x + this.width, this.y)
   }
 
   bottomLeft() {
-    return new Point({
-      x: this.x,
-      y: this.y + this.height,
-    })
+    return point(this.x, this.y + this.height)
   }
 
   bottomRight() {
-    return new Point({
-      x: this.x + this.width,
-      y: this.y + this.height,
-    })
+    return point(this.x + this.width, this.y + this.height)
   }
 }
 
