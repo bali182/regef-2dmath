@@ -16,7 +16,7 @@
     "rollup": "^0.52.2"
   },
   "scripts": {
-    "precommit": "npm test && npm run lint && npm run build",
+    "precommit": "npm test && npm run lint && npm run build && git add index.js",
     "test": "jest",
     "lint": "eslint src test -c .eslintrc",
     "bundle": "rollup -i src/index.js -o index.js -f cjs",
