@@ -107,6 +107,54 @@ function () {
   return Rectangle;
 }();
 
+function slope(segment) {
+  var x1 = segment.x1,
+      y1 = segment.y1,
+      x2 = segment.x2,
+      y2 = segment.y2;
+  return (y2 - y1) / (x2 - x1);
+} // https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line
+
+
+function lineIntersection(_ref, _ref2) {
+  var x1 = _ref.x1,
+      y1 = _ref.y1,
+      x2 = _ref.x2,
+      y2 = _ref.y2;
+  var x3 = _ref2.x1,
+      y3 = _ref2.y1,
+      x4 = _ref2.x2,
+      y4 = _ref2.y2;
+  var xNumerator = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4);
+  var yNumerator = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4);
+  var denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4); // not sure what this means but there is no intersection
+
+  if (denominator === 0) {
+    return null;
+  }
+
+  return point(xNumerator / denominator, yNumerator / denominator);
+}
+
+function _intersection(segment1, segment2) {
+  var slope1 = slope(segment1);
+  var slope2 = slope(segment2); // they are parallel
+
+  if (slope1 === slope2) {
+    return null;
+  } // intersect as line
+
+
+  var pt = lineIntersection(segment1, segment2); // point is on both line segments
+
+  if (pt !== null && segment1.containsPoint(pt) && segment2.containsPoint(pt)) {
+    return pt;
+  } // no intersection
+
+
+  return null;
+}
+
 var LineSegment =
 /*#__PURE__*/
 function () {
@@ -145,29 +193,24 @@ function () {
     key: "isVertical",
     value: function isVertical() {
       return this.x1 === this.x2;
-    } // TODO check with a math guy if this is correct
-
+    }
   }, {
     key: "intersection",
     value: function intersection(segment) {
       var other = lineSegment(segment);
-      var px = this.y1 - this.y2;
-      var py = this.x2 - this.x1;
-      var pw = this.x1 * this.y2 - this.x2 * this.y1;
-      var qx = other.y1 - other.y2;
-      var qy = other.x2 - other.x1;
-      var qw = other.x1 * other.y2 - other.x2 * other.y1;
-      var x = py * qw - qy * pw;
-      var y = qx * pw - px * qw;
-      var w = px * qy - qx * py;
-      var intersectionX = x / w;
-      var intersectionY = y / w;
-
-      if (Number.isNaN(intersectionX) || !Number.isFinite(intersectionX) || Number.isNaN(intersectionY) || !Number.isFinite(intersectionY)) {
-        return null;
-      }
-
-      return point(intersectionX, intersectionY);
+      return _intersection(this, other);
+    }
+  }, {
+    key: "containsPoint",
+    value: function containsPoint(p) {
+      var c = point(p);
+      var a = this.point1();
+      var b = this.point2();
+      var ab = point(b.x - a.x, b.y - a.y);
+      var ac = point(c.x - a.x, c.y - a.y);
+      var kac = ab.x * ac.x + ab.y * ab.y;
+      var kab = ab.x * ab.x + ab.y * ab.y;
+      return kab >= 0 && kac >= 0 && kab - kac >= 0;
     }
   }]);
 
@@ -237,6 +280,8 @@ function isLineSegmentLike(input) {
       y2 = input.y2;
   return isNumeric(x1) && isNumeric(y1) && isNumeric(x2) && isNumeric(y2);
 }
+/** @return {Dimension} */
+
 
 function dimension() {
   for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -260,6 +305,8 @@ function dimension() {
 
   throw new TypeError(`Can't construct a Dimension from: ${args}!`);
 }
+/** @return {Point} */
+
 
 function point() {
   for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
@@ -281,6 +328,8 @@ function point() {
 
   throw new TypeError(`Can't construct a Point from: ${args}!`);
 }
+/** @return {Rectangle} */
+
 
 function rectangle() {
   for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
@@ -314,6 +363,8 @@ function rectangle() {
 
   throw new TypeError(`Can't construct a Rectangle from: ${args}!`);
 }
+/** @return {LineSegment} */
+
 
 function lineSegment() {
   for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {

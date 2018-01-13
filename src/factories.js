@@ -5,6 +5,7 @@ import LineSegment from './LineSegment'
 
 import { isDimensionLike, isPointLike, isRectangleLike, isLineSegmentLike, isNumeric } from './utils'
 
+/** @return {Dimension} */
 export function dimension(...args) {
   if (args.length === 1 && args[0] instanceof Dimension) {
     return args[0]
@@ -18,6 +19,7 @@ export function dimension(...args) {
   throw new TypeError(`Can't construct a Dimension from: ${args}!`)
 }
 
+/** @return {Point} */
 export function point(...args) {
   if (args.length === 1 && args[0] instanceof Point) {
     return args[0]
@@ -31,6 +33,7 @@ export function point(...args) {
   throw new TypeError(`Can't construct a Point from: ${args}!`)
 }
 
+/** @return {Rectangle} */
 export function rectangle(...args) {
   if (args.length === 1 && args[0] instanceof Rectangle) {
     return args[0]
@@ -47,6 +50,7 @@ export function rectangle(...args) {
   throw new TypeError(`Can't construct a Rectangle from: ${args}!`)
 }
 
+/** @return {LineSegment} */
 export function lineSegment(...args) {
   if (args.length === 1 && args[0] instanceof LineSegment) {
     return args[0]

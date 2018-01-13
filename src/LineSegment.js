@@ -1,4 +1,5 @@
 import { point, lineSegment } from './factories'
+import intersection from './intersection'
 
 class LineSegment {
   constructor(x1, y1, x2, y2) {
@@ -30,33 +31,20 @@ class LineSegment {
     return this.x1 === this.x2
   }
 
-  // TODO check with a math guy if this is correct
   intersection(segment) {
     const other = lineSegment(segment)
-    const px = this.y1 - this.y2
-    const py = this.x2 - this.x1
-    const pw = (this.x1 * this.y2) - (this.x2 * this.y1)
+    return intersection(this, other)
+  }
 
-    const qx = other.y1 - other.y2
-    const qy = other.x2 - other.x1
-    const qw = (other.x1 * other.y2) - (other.x2 * other.y1)
-
-    const x = (py * qw) - (qy * pw)
-    const y = (qx * pw) - (px * qw)
-    const w = (px * qy) - (qx * py)
-
-    const intersectionX = x / w
-    const intersectionY = y / w
-
-    if (
-      (Number.isNaN(intersectionX)) ||
-      (!Number.isFinite(intersectionX) || Number.isNaN(intersectionY)) ||
-      (!Number.isFinite(intersectionY))
-    ) {
-      return null
-    }
-
-    return point(intersectionX, intersectionY)
+  containsPoint(p) {
+    const c = point(p)
+    const a = this.point1()
+    const b = this.point2()
+    const ab = point(b.x - a.x, b.y - a.y)
+    const ac = point(c.x - a.x, c.y - a.y)
+    const kac = (ab.x * ac.x) + (ab.y * ab.y)
+    const kab = (ab.x * ab.x) + (ab.y * ab.y)
+    return kab >= 0 && kac >= 0 && kab - kac >= 0
   }
 }
 
