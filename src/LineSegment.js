@@ -35,17 +35,6 @@ class LineSegment {
     const other = lineSegment(segment)
     return intersection(this, other)
   }
-
-  containsPoint(p) {
-    const c = point(p)
-    const a = this.point1()
-    const b = this.point2()
-    const ab = point(b.x - a.x, b.y - a.y)
-    const ac = point(c.x - a.x, c.y - a.y)
-    const kac = (ab.x * ac.x) + (ab.y * ab.y)
-    const kab = (ab.x * ab.x) + (ab.y * ab.y)
-    return kab >= 0 && kac >= 0 && kab - kac >= 0
-  }
 }
 
 export default LineSegment

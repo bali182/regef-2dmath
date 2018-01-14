@@ -127,13 +127,26 @@ function lineIntersection(_ref, _ref2) {
       y4 = _ref2.y2;
   var xNumerator = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4);
   var yNumerator = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4);
-  var denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4); // not sure what this means but there is no intersection
+  var denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
 
   if (denominator === 0) {
     return null;
   }
 
-  return point(xNumerator / denominator, yNumerator / denominator);
+  var x = xNumerator / denominator;
+  var y = yNumerator / denominator;
+  return point(x, y);
+} // https://www.lucidarme.me/check-if-a-point-belongs-on-a-line-segment/
+
+
+function onSegment(segment, c) {
+  var a = segment.point1();
+  var b = segment.point2();
+  var ab = point(b.x - a.x, b.y - a.y);
+  var ac = point(c.x - a.x, c.y - a.y);
+  var kac = ab.x * ac.x + ab.y * ab.y;
+  var kab = ab.x * ab.x + ab.y * ab.y;
+  return kab >= 0 && kac >= 0 && kab - kac >= 0;
 }
 
 function _intersection(segment1, segment2) {
@@ -147,7 +160,7 @@ function _intersection(segment1, segment2) {
 
   var pt = lineIntersection(segment1, segment2); // point is on both line segments
 
-  if (pt !== null && segment1.containsPoint(pt) && segment2.containsPoint(pt)) {
+  if (pt !== null && onSegment(segment1, pt) && onSegment(segment2, pt)) {
     return pt;
   } // no intersection
 
@@ -199,18 +212,6 @@ function () {
     value: function intersection(segment) {
       var other = lineSegment(segment);
       return _intersection(this, other);
-    }
-  }, {
-    key: "containsPoint",
-    value: function containsPoint(p) {
-      var c = point(p);
-      var a = this.point1();
-      var b = this.point2();
-      var ab = point(b.x - a.x, b.y - a.y);
-      var ac = point(c.x - a.x, c.y - a.y);
-      var kac = ab.x * ac.x + ab.y * ab.y;
-      var kab = ab.x * ab.x + ab.y * ab.y;
-      return kab >= 0 && kac >= 0 && kab - kac >= 0;
     }
   }]);
 
