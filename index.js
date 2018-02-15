@@ -434,14 +434,9 @@ function () {
   return Point;
 }();
 
-var Vector = function Vector() {
-  _classCallCheck(this, Vector);
-};
-
 exports.Point = Point;
 exports.Dimension = Dimension;
 exports.Rectangle = Rectangle;
-exports.Vector = Vector;
 exports.LineSegment = LineSegment;
 exports.point = point;
 exports.dimension = dimension;
