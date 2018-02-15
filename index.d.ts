@@ -1,16 +1,16 @@
 export class Point {
-  public readonly x: number
-  public readonly y: number
+  x: number
+  y: number
   translate(point: PointLike): Point
   lineSegmentTo(point: PointLike): Point
   distanceFromPoint(point: PointLike): Point
 }
 
 export class Rectangle {
-  public readonly x: number
-  public readonly y: number
-  public readonly width: number
-  public readonly height: number
+  x: number
+  y: number
+  width: number
+  height: number
 
   location(): Point
   size(): Dimension
@@ -29,15 +29,15 @@ export class Rectangle {
 }
 
 export class Dimension {
-  public readonly width: number
-  public readonly height: number
+  width: number
+  height: number
 }
 
 export class LineSegment {
-  public readonly x1: number
-  public readonly y1: number
-  public readonly x2: number
-  public readonly y2: number
+  x1: number
+  y1: number
+  x2: number
+  y2: number
   point1(): Point
   point2(): Point
   length(): number
