@@ -2,8 +2,9 @@ import Dimension from './Dimension'
 import Point from './Point'
 import Rectangle from './Rectangle'
 import LineSegment from './LineSegment'
+import Line from './Line'
 
-import { isDimensionLike, isPointLike, isRectangleLike, isLineSegmentLike, isNumeric } from './utils'
+import { isDimensionLike, isPointLike, isRectangleLike, isLineSegmentLike, isNumeric, isLineLike } from './utils'
 
 /** @return {Dimension} */
 export function dimension(...args) {
@@ -63,6 +64,23 @@ export function lineSegment(...args) {
   } else if (args.length === 2 && args.every(isPointLike)) {
     const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = args
     return new LineSegment(x1, y1, x2, y2)
+  }
+  throw new TypeError(`Can't construct a LineSegment from: ${args}!`)
+}
+
+/** @return {Line} */
+export function line(...args) {
+  if (args.length === 1 && args[0] instanceof Line) {
+    return args[0]
+  } else if (args.length === 4 && args.every(isNumeric)) {
+    const [x1, y1, x2, y2] = args
+    return new Line(x1, y1, x2, y2)
+  } else if (args.length === 1 && isLineLike(args[0])) {
+    const [{ x1, y1, x2, y2 }] = args
+    return new Line(x1, y1, x2, y2)
+  } else if (args.length === 2 && args.every(isPointLike)) {
+    const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = args
+    return new Line(x1, y1, x2, y2)
   }
   throw new TypeError(`Can't construct a LineSegment from: ${args}!`)
 }

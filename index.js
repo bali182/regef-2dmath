@@ -107,67 +107,6 @@ function () {
   return Rectangle;
 }();
 
-function slope(segment) {
-  var x1 = segment.x1,
-      y1 = segment.y1,
-      x2 = segment.x2,
-      y2 = segment.y2;
-  return (y2 - y1) / (x2 - x1);
-} // https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line
-
-
-function lineIntersection(_ref, _ref2) {
-  var x1 = _ref.x1,
-      y1 = _ref.y1,
-      x2 = _ref.x2,
-      y2 = _ref.y2;
-  var x3 = _ref2.x1,
-      y3 = _ref2.y1,
-      x4 = _ref2.x2,
-      y4 = _ref2.y2;
-  var xNumerator = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4);
-  var yNumerator = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4);
-  var denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-
-  if (denominator === 0) {
-    return null;
-  }
-
-  var x = xNumerator / denominator;
-  var y = yNumerator / denominator;
-  return point(x, y);
-} // https://www.lucidarme.me/check-if-a-point-belongs-on-a-line-segment/
-
-
-function onSegment(segment, c) {
-  var a = segment.point1();
-  var b = segment.point2();
-  var ab = point(b.x - a.x, b.y - a.y);
-  var ac = point(c.x - a.x, c.y - a.y);
-  var kac = ab.x * ac.x + ab.y * ab.y;
-  var kab = ab.x * ab.x + ab.y * ab.y;
-  return kab >= 0 && kac >= 0 && kab - kac >= 0;
-}
-
-function _intersection(segment1, segment2) {
-  var slope1 = slope(segment1);
-  var slope2 = slope(segment2); // they are parallel
-
-  if (slope1 === slope2) {
-    return null;
-  } // intersect as line
-
-
-  var pt = lineIntersection(segment1, segment2); // point is on both line segments
-
-  if (pt !== null && onSegment(segment1, pt) && onSegment(segment2, pt)) {
-    return pt;
-  } // no intersection
-
-
-  return null;
-}
-
 var LineSegment =
 /*#__PURE__*/
 function () {
@@ -191,6 +130,11 @@ function () {
       return point(this.x2, this.y2);
     }
   }, {
+    key: "asLine",
+    value: function asLine() {
+      return line(this);
+    }
+  }, {
     key: "length",
     value: function length() {
       var dx = this.x1 - this.x2;
@@ -207,15 +151,52 @@ function () {
     value: function isVertical() {
       return this.x1 === this.x2;
     }
-  }, {
-    key: "intersection",
-    value: function intersection(segment) {
-      var other = lineSegment(segment);
-      return _intersection(this, other);
-    }
   }]);
 
   return LineSegment;
+}();
+
+var Line =
+/*#__PURE__*/
+function () {
+  function Line(x1, y1, x2, y2) {
+    _classCallCheck(this, Line);
+
+    this.x1 = x1;
+    this.y1 = y1;
+    this.x2 = x2;
+    this.y2 = y2;
+  }
+
+  _createClass(Line, [{
+    key: "intersection",
+    value: function intersection(other) {
+      var x1 = this.x1,
+          y1 = this.y1,
+          x2 = this.x2,
+          y2 = this.y2;
+
+      var _line = line(other),
+          x3 = _line.x1,
+          y3 = _line.y1,
+          x4 = _line.x2,
+          y4 = _line.y2;
+
+      var xNumerator = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4);
+      var yNumerator = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4);
+      var denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+
+      if (denominator === 0) {
+        return null;
+      }
+
+      var x = xNumerator / denominator;
+      var y = yNumerator / denominator;
+      return point(x, y);
+    }
+  }]);
+
+  return Line;
 }();
 
 function isNumeric(input) {
@@ -268,6 +249,22 @@ function isRectangleLike(input) {
 
 function isLineSegmentLike(input) {
   if (input instanceof LineSegment) {
+    return true;
+  }
+
+  if (!(input instanceof Object)) {
+    return false;
+  }
+
+  var x1 = input.x1,
+      y1 = input.y1,
+      x2 = input.x2,
+      y2 = input.y2;
+  return isNumeric(x1) && isNumeric(y1) && isNumeric(x2) && isNumeric(y2);
+}
+
+function isLineLike(input) {
+  if (input instanceof Line) {
     return true;
   }
 
@@ -399,6 +396,41 @@ function lineSegment() {
 
   throw new TypeError(`Can't construct a LineSegment from: ${args}!`);
 }
+/** @return {Line} */
+
+
+function line() {
+  for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+    args[_key5] = arguments[_key5];
+  }
+
+  if (args.length === 1 && args[0] instanceof Line) {
+    return args[0];
+  } else if (args.length === 4 && args.every(isNumeric)) {
+    var x1 = args[0],
+        y1 = args[1],
+        x2 = args[2],
+        y2 = args[3];
+    return new Line(x1, y1, x2, y2);
+  } else if (args.length === 1 && isLineLike(args[0])) {
+    var _args$9 = args[0],
+        _x8 = _args$9.x1,
+        _y8 = _args$9.y1,
+        _x9 = _args$9.x2,
+        _y9 = _args$9.y2;
+    return new Line(_x8, _y8, _x9, _y9);
+  } else if (args.length === 2 && args.every(isPointLike)) {
+    var _args$10 = args[0],
+        _x10 = _args$10.x,
+        _y10 = _args$10.y,
+        _args$11 = args[1],
+        _x11 = _args$11.x,
+        _y11 = _args$11.y;
+    return new Line(_x10, _y10, _x11, _y11);
+  }
+
+  throw new TypeError(`Can't construct a LineSegment from: ${args}!`);
+}
 
 var Point =
 /*#__PURE__*/
@@ -438,7 +470,9 @@ exports.Point = Point;
 exports.Dimension = Dimension;
 exports.Rectangle = Rectangle;
 exports.LineSegment = LineSegment;
+exports.Line = Line;
 exports.point = point;
 exports.dimension = dimension;
 exports.rectangle = rectangle;
 exports.lineSegment = lineSegment;
+exports.line = line;

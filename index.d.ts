@@ -43,7 +43,15 @@ export class LineSegment {
   length(): number
   isHorizontal(): boolean
   isVertical(): boolean
-  intersection(segment: LineSegmentLike): Point
+  aLine(): Line
+}
+
+export class Line {
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  intersection(line: LineLike): Point
 }
 
 interface PointLike {
@@ -83,3 +91,14 @@ interface LineSegmentLike {
 export function lineSegment(x1: number, y1: number, x2: number, y2: number): LineSegment
 export function lineSegment(p1: PointLike, p2: PointLike): LineSegment
 export function lineSegment(other: LineSegmentLike): LineSegment
+
+interface LineLike {
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+}
+
+export function line(x1: number, y1: number, x2: number, y2: number): Line
+export function line(p1: PointLike, p2: PointLike): Line
+export function line(other: LineLike): Line

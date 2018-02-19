@@ -1,5 +1,4 @@
-import { point, lineSegment } from './factories'
-import intersection from './intersection'
+import { point, line } from './factories'
 
 class LineSegment {
   constructor(x1, y1, x2, y2) {
@@ -17,6 +16,10 @@ class LineSegment {
     return point(this.x2, this.y2)
   }
 
+  asLine() {
+    return line(this)
+  }
+
   length() {
     const dx = this.x1 - this.x2
     const dy = this.y1 - this.y2
@@ -29,11 +32,6 @@ class LineSegment {
 
   isVertical() {
     return this.x1 === this.x2
-  }
-
-  intersection(segment) {
-    const other = lineSegment(segment)
-    return intersection(this, other)
   }
 }
 
