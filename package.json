@@ -1,5 +1,5 @@
 {
-  "name": "regef-2dmath",
+  "name": "regef-geometry",
   "version": "0.0.0",
   "main": "dist/index.js",
   "devDependencies": {
