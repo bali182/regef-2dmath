@@ -186,8 +186,8 @@ function () {
       return (p.x - this.x1) * dy === (p.y - this.y1) * dx;
     }
   }, {
-    key: "intersects",
-    value: function intersects(s) {
+    key: "intersection",
+    value: function intersection(s) {
       var other = lineSegment(s);
       var selfLine = line(this);
       var otherLine = line(s);

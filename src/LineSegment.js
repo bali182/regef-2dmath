@@ -63,7 +63,7 @@ class LineSegment {
     return (((p.x - this.x1) * dy) === ((p.y - this.y1) * dx))
   }
 
-  intersects(s) {
+  intersection(s) {
     const other = lineSegment(s)
     const selfLine = line(this)
     const otherLine = line(s)
