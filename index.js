@@ -150,23 +150,40 @@ function () {
       return this.x1 === this.x2;
     }
   }, {
+    key: "boundingRectangle",
+    value: function boundingRectangle() {
+      var x1 = this.x1,
+          x2 = this.x2,
+          y1 = this.y1,
+          y2 = this.y2;
+      var x = Math.min(x1, x2);
+      var y = Math.min(y1, y2);
+      var width = Math.max(x1, x2) - x;
+      var height = Math.max(y1, y2) - y;
+      return rectangle(x, y, width, height);
+    }
+  }, {
     key: "containsPoint",
     value: function containsPoint(pt) {
-      var intPoint = point(pt);
+      var p = point(pt);
+
+      if (!this.boundingRectangle().containsPoint(p)) {
+        return false;
+      }
 
       if (this.isVertical()) {
         var top = Math.min(this.y1, this.y2);
         var bottom = Math.max(this.y1, this.y2);
-        return Math.abs(Math.abs(intPoint.x) - Math.abs(this.x1)) < EPSILON && intPoint.y >= top && intPoint.y <= bottom;
+        return Math.abs(Math.abs(p.x) - Math.abs(this.x1)) < EPSILON && p.y >= top && p.y <= bottom;
       } else if (this.isHorizontal()) {
         var left = Math.min(this.x1, this.x2);
         var right = Math.max(this.x1, this.x2);
-        return Math.abs(Math.abs(intPoint.y) - Math.abs(this.y1)) < EPSILON && intPoint.x >= left && intPoint.x <= right;
+        return Math.abs(Math.abs(p.y) - Math.abs(this.y1)) < EPSILON && p.x >= left && p.x <= right;
       }
 
       var dx = this.x2 - this.x1;
       var dy = this.y2 - this.y1;
-      return (intPoint.x - this.x1) * dy === (intPoint.y - this.y1) * dx;
+      return (p.x - this.x1) * dy === (p.y - this.y1) * dx;
     }
   }, {
     key: "intersects",

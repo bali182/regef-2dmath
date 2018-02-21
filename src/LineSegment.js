@@ -1,4 +1,4 @@
-import { point, line, lineSegment } from './factories'
+import { point, line, lineSegment, rectangle } from './factories'
 
 // stolen from sindresorhus/number-epsilon
 const EPSILON = 'EPSILON' in Number ? Number.EPSILON : 2.220446049250313e-16
@@ -33,22 +33,34 @@ class LineSegment {
     return this.x1 === this.x2
   }
 
+  boundingRectangle() {
+    const { x1, x2, y1, y2 } = this
+    const x = Math.min(x1, x2)
+    const y = Math.min(y1, y2)
+    const width = Math.max(x1, x2) - x
+    const height = Math.max(y1, y2) - y
+    return rectangle(x, y, width, height)
+  }
+
   containsPoint(pt) {
-    const intPoint = point(pt)
+    const p = point(pt)
+    if (!this.boundingRectangle().containsPoint(p)) {
+      return false
+    }
     if (this.isVertical()) {
       const top = Math.min(this.y1, this.y2)
       const bottom = Math.max(this.y1, this.y2)
-      return Math.abs(Math.abs(intPoint.x) - Math.abs(this.x1)) < EPSILON
-        && intPoint.y >= top && intPoint.y <= bottom
+      return Math.abs(Math.abs(p.x) - Math.abs(this.x1)) < EPSILON
+        && p.y >= top && p.y <= bottom
     } else if (this.isHorizontal()) {
       const left = Math.min(this.x1, this.x2)
       const right = Math.max(this.x1, this.x2)
-      return Math.abs(Math.abs(intPoint.y) - Math.abs(this.y1)) < EPSILON
-        && intPoint.x >= left && intPoint.x <= right
+      return Math.abs(Math.abs(p.y) - Math.abs(this.y1)) < EPSILON
+        && p.x >= left && p.x <= right
     }
     const dx = this.x2 - this.x1
     const dy = this.y2 - this.y1
-    return (((intPoint.x - this.x1) * dy) === ((intPoint.y - this.y1) * dx))
+    return (((p.x - this.x1) * dy) === ((p.y - this.y1) * dx))
   }
 
   intersects(s) {
