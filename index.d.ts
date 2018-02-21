@@ -43,7 +43,7 @@ export class LineSegment {
   length(): number
   isHorizontal(): boolean
   isVertical(): boolean
-  aLine(): Line
+  intersection(line: LineSegmentLike): Point
 }
 
 export class Line {
