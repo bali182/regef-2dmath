@@ -49,7 +49,7 @@ function () {
     key: "containsPoint",
     value: function containsPoint(p) {
       var input = point(p);
-      return input.y >= this.y && input.y < this.y + this.height && input.x >= this.x && input.x < this.x + this.width;
+      return input.y >= this.y && input.y <= this.y + this.height && input.x >= this.x && input.x <= this.x + this.width;
     }
   }, {
     key: "containsRectangle",
@@ -105,10 +105,17 @@ function () {
   }]);
 
   return Rectangle;
-}(); // stolen from sindresorhus/number-epsilon
+}();
 
+var EPSILON = 0.01; // we are talking about pixels so this is small enough
 
-var EPSILON = 'EPSILON' in Number ? Number.EPSILON : 2.220446049250313e-16;
+var sign = function sign(x) {
+  if (x === 0) {
+    return 0;
+  }
+
+  return x > 0 ? 1 : -1;
+};
 
 var LineSegment =
 /*#__PURE__*/
@@ -158,9 +165,9 @@ function () {
           y2 = this.y2;
       var x = Math.min(x1, x2);
       var y = Math.min(y1, y2);
-      var width = Math.max(Math.max(x1, x2) - x, EPSILON);
-      var height = Math.max(Math.max(y1, y2) - y, EPSILON);
-      return rectangle(x, y, width, height);
+      var width = Math.max(x1, x2) - x;
+      var height = Math.max(y1, y2) - y;
+      return rectangle(width > 0 ? x : x - EPSILON, height > 0 ? y : y - EPSILON, Math.max(width, EPSILON), Math.max(height, EPSILON));
     }
   }, {
     key: "containsPoint",
@@ -171,19 +178,11 @@ function () {
         return false;
       }
 
-      if (this.isVertical()) {
-        var top = Math.min(this.y1, this.y2);
-        var bottom = Math.max(this.y1, this.y2);
-        return Math.abs(Math.abs(p.x) - Math.abs(this.x1)) < EPSILON && p.y >= top && p.y <= bottom;
-      } else if (this.isHorizontal()) {
-        var left = Math.min(this.x1, this.x2);
-        var right = Math.max(this.x1, this.x2);
-        return Math.abs(Math.abs(p.y) - Math.abs(this.y1)) < EPSILON && p.x >= left && p.x <= right;
-      }
-
       var dx = this.x2 - this.x1;
       var dy = this.y2 - this.y1;
-      return (p.x - this.x1) * dy === (p.y - this.y1) * dx;
+      var a = (p.x - this.x1) * dy;
+      var b = (p.y - this.y1) * dx;
+      return sign(a) === sign(b) && Math.abs(Math.abs(a) - Math.abs(b)) < EPSILON;
     }
   }, {
     key: "intersection",

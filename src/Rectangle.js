@@ -29,9 +29,9 @@ class Rectangle {
   containsPoint(p) {
     const input = point(p)
     return input.y >= this.y
-      && input.y < this.y + this.height
+      && input.y <= this.y + this.height
       && input.x >= this.x
-      && input.x < this.x + this.width
+      && input.x <= this.x + this.width
   }
 
   containsRectangle(rect) {

@@ -1,7 +1,13 @@
 import { point, line, lineSegment, rectangle } from './factories'
 
-// stolen from sindresorhus/number-epsilon
-const EPSILON = 'EPSILON' in Number ? Number.EPSILON : 2.220446049250313e-16
+const EPSILON = 0.01 // we are talking about pixels so this is small enough
+
+const sign = (x) => {
+  if (x === 0) {
+    return 0
+  }
+  return x > 0 ? 1 : -1
+}
 
 class LineSegment {
   constructor(x1, y1, x2, y2) {
@@ -37,9 +43,14 @@ class LineSegment {
     const { x1, x2, y1, y2 } = this
     const x = Math.min(x1, x2)
     const y = Math.min(y1, y2)
-    const width = Math.max(Math.max(x1, x2) - x, EPSILON)
-    const height = Math.max(Math.max(y1, y2) - y, EPSILON)
-    return rectangle(x, y, width, height)
+    const width = Math.max(x1, x2) - x
+    const height = Math.max(y1, y2) - y
+    return rectangle(
+      width > 0 ? x : x - EPSILON,
+      height > 0 ? y : y - EPSILON,
+      Math.max(width, EPSILON),
+      Math.max(height, EPSILON),
+    )
   }
 
   containsPoint(pt) {
@@ -47,20 +58,11 @@ class LineSegment {
     if (!this.boundingRectangle().containsPoint(p)) {
       return false
     }
-    if (this.isVertical()) {
-      const top = Math.min(this.y1, this.y2)
-      const bottom = Math.max(this.y1, this.y2)
-      return Math.abs(Math.abs(p.x) - Math.abs(this.x1)) < EPSILON
-        && p.y >= top && p.y <= bottom
-    } else if (this.isHorizontal()) {
-      const left = Math.min(this.x1, this.x2)
-      const right = Math.max(this.x1, this.x2)
-      return Math.abs(Math.abs(p.y) - Math.abs(this.y1)) < EPSILON
-        && p.x >= left && p.x <= right
-    }
     const dx = this.x2 - this.x1
     const dy = this.y2 - this.y1
-    return (((p.x - this.x1) * dy) === ((p.y - this.y1) * dx))
+    const a = ((p.x - this.x1) * dy)
+    const b = ((p.y - this.y1) * dx)
+    return sign(a) === sign(b) && Math.abs(Math.abs(a) - Math.abs(b)) < EPSILON
   }
 
   intersection(s) {
