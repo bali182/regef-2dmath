@@ -43,6 +43,7 @@ export class LineSegment {
   length(): number
   isHorizontal(): boolean
   isVertical(): boolean
+  containsPoint(point: Point): boolean
   intersection(line: LineSegmentLike): Point
 }
 

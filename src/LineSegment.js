@@ -1,4 +1,4 @@
-import { point, line } from './factories'
+import { point, line, lineSegment } from './factories'
 
 // stolen from sindresorhus/number-epsilon
 const EPSILON = 'EPSILON' in Number ? Number.EPSILON : 2.220446049250313e-16
@@ -33,30 +33,36 @@ class LineSegment {
     return this.x1 === this.x2
   }
 
-  intersects(s) {
-    const self = line(this)
-    const other = line(s)
-    const intPoint = self.intersection(other)
-    if (intPoint === null) {
-      return null
-    }
+  containsPoint(pt) {
+    const intPoint = point(pt)
     if (this.isVertical()) {
       const top = Math.min(this.y1, this.y2)
       const bottom = Math.max(this.y1, this.y2)
-      const onSegment = Math.abs(Math.abs(intPoint.x) - Math.abs(this.x1)) < EPSILON
+      return Math.abs(Math.abs(intPoint.x) - Math.abs(this.x1)) < EPSILON
         && intPoint.y >= top && intPoint.y <= bottom
-      return onSegment ? intPoint : null
     } else if (this.isHorizontal()) {
       const left = Math.min(this.x1, this.x2)
       const right = Math.max(this.x1, this.x2)
-      const onSegment = Math.abs(Math.abs(intPoint.y) - Math.abs(this.y1)) < EPSILON
+      return Math.abs(Math.abs(intPoint.y) - Math.abs(this.y1)) < EPSILON
         && intPoint.x >= left && intPoint.x <= right
-      return onSegment ? intPoint : null
     }
     const dx = this.x2 - this.x1
     const dy = this.y2 - this.y1
-    const onSegment = (((intPoint.x - this.x1) * dy) === ((intPoint.y - this.y1) * dx))
-    return onSegment ? intPoint : null
+    return (((intPoint.x - this.x1) * dy) === ((intPoint.y - this.y1) * dx))
+  }
+
+  intersects(s) {
+    const other = lineSegment(s)
+    const selfLine = line(this)
+    const otherLine = line(s)
+    const lineIntersection = selfLine.intersection(otherLine)
+    if (lineIntersection === null) {
+      return null
+    }
+    if (!this.containsPoint(lineIntersection) || !other.containsPoint(lineIntersection)) {
+      return null
+    }
+    return lineIntersection
   }
 }
 

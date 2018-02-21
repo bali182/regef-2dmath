@@ -150,36 +150,41 @@ function () {
       return this.x1 === this.x2;
     }
   }, {
-    key: "intersects",
-    value: function intersects(s) {
-      var self = line(this);
-      var other = line(s);
-      var intPoint = self.intersection(other);
-
-      if (intPoint === null) {
-        return null;
-      }
+    key: "containsPoint",
+    value: function containsPoint(pt) {
+      var intPoint = point(pt);
 
       if (this.isVertical()) {
         var top = Math.min(this.y1, this.y2);
         var bottom = Math.max(this.y1, this.y2);
-
-        var _onSegment = Math.abs(Math.abs(intPoint.x) - Math.abs(this.x1)) < EPSILON && intPoint.y >= top && intPoint.y <= bottom;
-
-        return _onSegment ? intPoint : null;
+        return Math.abs(Math.abs(intPoint.x) - Math.abs(this.x1)) < EPSILON && intPoint.y >= top && intPoint.y <= bottom;
       } else if (this.isHorizontal()) {
         var left = Math.min(this.x1, this.x2);
         var right = Math.max(this.x1, this.x2);
-
-        var _onSegment2 = Math.abs(Math.abs(intPoint.y) - Math.abs(this.y1)) < EPSILON && intPoint.x >= left && intPoint.x <= right;
-
-        return _onSegment2 ? intPoint : null;
+        return Math.abs(Math.abs(intPoint.y) - Math.abs(this.y1)) < EPSILON && intPoint.x >= left && intPoint.x <= right;
       }
 
       var dx = this.x2 - this.x1;
       var dy = this.y2 - this.y1;
-      var onSegment = (intPoint.x - this.x1) * dy === (intPoint.y - this.y1) * dx;
-      return onSegment ? intPoint : null;
+      return (intPoint.x - this.x1) * dy === (intPoint.y - this.y1) * dx;
+    }
+  }, {
+    key: "intersects",
+    value: function intersects(s) {
+      var other = lineSegment(s);
+      var selfLine = line(this);
+      var otherLine = line(s);
+      var lineIntersection = selfLine.intersection(otherLine);
+
+      if (lineIntersection === null) {
+        return null;
+      }
+
+      if (!this.containsPoint(lineIntersection) || !other.containsPoint(lineIntersection)) {
+        return null;
+      }
+
+      return lineIntersection;
     }
   }]);
 
