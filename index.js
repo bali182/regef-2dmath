@@ -158,8 +158,8 @@ function () {
           y2 = this.y2;
       var x = Math.min(x1, x2);
       var y = Math.min(y1, y2);
-      var width = Math.max(x1, x2) - x;
-      var height = Math.max(y1, y2) - y;
+      var width = Math.max(Math.max(x1, x2) - x, EPSILON);
+      var height = Math.max(Math.max(y1, y2) - y, EPSILON);
       return rectangle(x, y, width, height);
     }
   }, {

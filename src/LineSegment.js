@@ -37,8 +37,8 @@ class LineSegment {
     const { x1, x2, y1, y2 } = this
     const x = Math.min(x1, x2)
     const y = Math.min(y1, y2)
-    const width = Math.max(x1, x2) - x
-    const height = Math.max(y1, y2) - y
+    const width = Math.max(Math.max(x1, x2) - x, EPSILON)
+    const height = Math.max(Math.max(y1, y2) - y, EPSILON)
     return rectangle(x, y, width, height)
   }
 
