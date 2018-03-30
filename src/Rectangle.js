@@ -42,6 +42,20 @@ class Rectangle {
       && this.y + this.height >= input.y + input.height
   }
 
+  intersection(rect) {
+    const input = rectangle(rect)
+
+    const leftX = Math.max(this.x, input.x)
+    const rightX = Math.min(this.x + this.width, input.x + input.width)
+    const topY = Math.max(this.y, input.y)
+    const bottomY = Math.min(this.y + this.height, input.y + input.height)
+
+    if (leftX < rightX && topY < bottomY) {
+      return rectangle(leftX, topY, rightX - leftX, bottomY - topY)
+    }
+    return null
+  }
+
   top() {
     return lineSegment(this.topLeft(), this.topRight())
   }

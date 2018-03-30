@@ -17,6 +17,7 @@ export class Rectangle {
   translate(point: PointLike): Rectangle
   containsPoint(point: PointLike): boolean
   containsRectangle(rectangle: RectangleLike): boolean
+  intersection(rectangle: RectangleLike): Rectangle
   top(): LineSegment
   right(): LineSegment
   bottom(): LineSegment

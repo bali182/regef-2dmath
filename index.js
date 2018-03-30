@@ -58,6 +58,21 @@ function () {
       return this.x <= input.x && this.y <= input.y && this.x + this.width >= input.x + input.width && this.y + this.height >= input.y + input.height;
     }
   }, {
+    key: "intersection",
+    value: function intersection(rect) {
+      var input = rectangle(rect);
+      var leftX = Math.max(this.x, input.x);
+      var rightX = Math.min(this.x + this.width, input.x + input.width);
+      var topY = Math.max(this.y, input.y);
+      var bottomY = Math.min(this.y + this.height, input.y + input.height);
+
+      if (leftX < rightX && topY < bottomY) {
+        return rectangle(leftX, topY, rightX - leftX, bottomY - topY);
+      }
+
+      return null;
+    }
+  }, {
     key: "top",
     value: function top() {
       return lineSegment(this.topLeft(), this.topRight());
