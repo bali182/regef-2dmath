@@ -509,6 +509,11 @@ function () {
   }
 
   _createClass(Point, [{
+    key: "negated",
+    value: function negated() {
+      return point(-this.x, -this.y);
+    }
+  }, {
     key: "translate",
     value: function translate(p) {
       var other = point(p);

@@ -6,6 +6,10 @@ class Point {
     this.y = Number(y)
   }
 
+  negated() {
+    return point(-this.x, -this.y)
+  }
+
   translate(p) {
     const other = point(p)
     return point(
