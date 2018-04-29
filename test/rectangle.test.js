@@ -1,4 +1,4 @@
-import { point, dimension, rectangle, lineSegment } from '../src'
+const { point, dimension, rectangle, lineSegment } = require('../index')
 
 describe('Rectangle', () => {
   it('should return the proper location and size', () => {

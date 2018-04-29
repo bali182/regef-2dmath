@@ -1,4 +1,4 @@
-import { point, Point, dimension, Dimension, rectangle, Rectangle, lineSegment, LineSegment } from '../src'
+const { point, Point, dimension, Dimension, rectangle, Rectangle, lineSegment, LineSegment } = require('../index')
 
 describe('factories', () => {
   describe('point', () => {

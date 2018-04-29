@@ -1,9 +1,14 @@
 {
   "presets": [
-    ["@babel/preset-env", {
-      "targets": {
-        "node": "4"
+    [
+      "env",
+      {
+        "modules": false
       }
-    }]
+    ],
+    "stage-0"
+  ],
+  "plugins": [
+    "external-helpers"
   ]
 }
